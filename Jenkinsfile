@@ -8,7 +8,15 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+                steps {
+                    scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
+                }
+        }
         stage('Build') {
+            when{
+                when { not { changelog '^.*#no_unittest.*$'} }
+            }
             steps {
                 // Get some code from a GitHub repository
                 git url: 'https://github.com/lukaszw544/szkolenie-ci-jenkins-example.git', branch: 'main'
